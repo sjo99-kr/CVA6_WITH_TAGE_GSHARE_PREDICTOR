@@ -1,20 +1,20 @@
-# CVA6 RISC-V CPU [![Build Status](https://github.com/openhwgroup/cva6/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/openhwgroup/cva6/actions/workflows/ci.yml) [![CVA6 dashboard](https://riscv-ci.pages.thales-invia.fr/dashboard/badge_master.svg)](https://riscv-ci.pages.thales-invia.fr/dashboard/dashboard_cva6.html) [![Documentation Status](https://readthedocs.com/projects/openhw-group-cva6-user-manual/badge/?version=latest)](https://docs.openhwgroup.org/projects/cva6-user-manual/?badge=latest) [![GitHub release](https://img.shields.io/github/release/openhwgroup/cva6?include_prereleases=&sort=semver&color=blue)](https://github.com/openhwgroup/cva6/releases/)
-
 # 🚀 CVA6 Branch Predictor Extension (GShare & TAGE)
 
-This repository implements an enhanced Branch Prediction Unit for the CVA6 (formerly Ariane) open-source RISC-V core.
+This repository implements an enhanced Branch Prediction Unit for the **CVA6 (formerly Ariane)** open-source RISC-V core.
 
-The project extends the CVA6 frontend architecture by integrating high-performance **GShare** and **TAGE (Tagged Geometric History Length)** branch predictors.
+The project extends the **CVA6 frontend architecture** by integrating high-performance **GShare** and **TAGE (Tagged Geometric History Length)** branch predictors.
 
-The predictors are evaluated using both microbenchmarks and application benchmarks to analyze their impact on branch prediction accuracy and overall CPU performance.
+The predictors are evaluated using both **microbenchmarks** and **application benchmarks** to analyze their impact on branch prediction accuracy and overall CPU performance.
 
 The goal is to improve processor performance by increasing **IPC (Instructions Per Cycle)** and reducing **branch misprediction penalties**.
 
-## Overview
+---
 
-This project extends the branch prediction unit of the CVA6 open-source RISC-V processor by implementing **GShare** and **TAGE** branch predictors.
+## 🧩 Overview
 
-The implementation focuses primarily on modifications to the **frontend stage** of the processor pipeline.
+This project extends the branch prediction unit of the **CVA6 open-source RISC-V processor** by implementing **GShare** and **TAGE** branch predictors.
+
+The implementation focuses primarily on modifications to the **frontend stage of the processor pipeline**.
 
 For details about the original architecture, refer to the official CVA6 repository.
 
@@ -23,9 +23,10 @@ https://github.com/openhwgroup/cva6
 
 ---
 
-## Modified Components
+## ⚙️ Modified Components
 
-The branch predictor implementation required modifications to several frontend components:
+The branch predictor implementation required modifications to several frontend and core pipeline components:
+
 - `core/cva6.sv`
 - `core/branch_unit.sv`
 - `core/include/ariane_pkg.sv`
@@ -37,7 +38,9 @@ The branch predictor implementation required modifications to several frontend c
 - `core/frontend/TageBaseTable.sv`
 - `core/frontend/TageTable.sv`
 
-## Branch Predictor Configuration
+---
+
+## 🔧 Branch Predictor Configuration
 
 Branch predictor parameters can be configured by modifying the following files:
 
@@ -48,19 +51,23 @@ Currently, the implementation supports the **cv32a60x** and **cv32a65x** configu
 
 Support for additional CVA6 configurations will be extended in future work.
 
-# Evaluation of Implemented Branch Predictors
+---
 
-## Hardware Configuration and Cost Comparison on branch predictors
+# 📊 Evaluation
 
-| Branch Predictor | Num. of Tables | Num. of Entries | Bits per Entry | Total Cost (Bytes) | 
+## 🧮 Hardware Cost Comparison
+
+| Branch Predictor | Num. of Tables | Num. of Entries | Bits per Entry | Total Cost (Bytes) |
 |-----------------|---------------|----------------|---------------|-------------------|
 | Baseline (BHT) | 1 | 8192 | 2-bit counter + 1-bit valid | 3,072 B |
-| GShare | 1 | 8192 | 2-bit counter + 1-bit valid | 3,072 B | 
+| GShare | 1 | 8192 | 2-bit counter + 1-bit valid | 3,072 B |
 | TAGE | 4 | 64 / 256 / 512 / 1024 | 2-bit counter + 1-bit valid + tag (0/4/6/8 bit) | 2,224 B |
 
-**For detailed architectural specifications of the TAGE branch predictor, please refer to the README.md in the core directory.**
+**For detailed architectural specifications of the TAGE branch predictor, refer to the README.md in the core directory.**
 
-## Benchmark Methodology
+---
+
+## 🧪 Benchmark Methodology
 
 Two types of benchmarks are used for evaluation.
 
@@ -79,6 +86,7 @@ Synthetic workloads designed to stress specific branch behavior patterns.
 
 - **Correlated Periodic**  
   Evaluates the effectiveness of predictors in recognizing long periodic branch patterns generated from multiple correlated conditions.
+
 ---
 
 ### Application Benchmarks
@@ -93,9 +101,10 @@ Real workloads with control-flow intensive behavior.
 
 - **QuickSort**  
   Tests predictor performance on recursive divide-and-conquer algorithms with data-dependent branching.
+
 ---
 
-## Results
+## 📈 Performance Results
 
 ### Normalized IPC
 
@@ -105,9 +114,8 @@ The figure shows the normalized IPC improvement of different branch predictors a
 
 GShare and TAGE significantly improve performance compared to the baseline BHT, particularly for structured branch patterns such as alternating and correlated branches.
 
-The effectiveness of TAGE can vary depending on the hashing scheme and the number of tag/index bits, which influence the level of aliasing in prediction tables. As a result, different applications with different branch behavior patterns may experience different performance improvements.
+The effectiveness of TAGE can vary depending on the hashing scheme and the number of tag/index bits, which influence the level of aliasing in prediction tables.
 
-These results demonstrate the impact of more advanced branch prediction mechanisms on overall processor performance.
 ---
 
 ### Branch Miss Rate
@@ -116,11 +124,6 @@ These results demonstrate the impact of more advanced branch prediction mechanis
 
 The figure shows the branch miss rate across different predictors.
 
-GShare and TAGE significantly outperform the baseline BHT for structured branch patterns, demonstrating the benefit of history-based prediction mechanisms.
+GShare and TAGE significantly outperform the baseline BHT for structured branch patterns, demonstrating the benefits of history-based branch prediction mechanisms.
 
 The performance gap varies across applications due to differences in branch patterns and aliasing behavior within the predictor tables.
-
----
-
-
-
