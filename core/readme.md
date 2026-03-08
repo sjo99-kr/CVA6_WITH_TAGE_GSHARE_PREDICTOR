@@ -27,7 +27,33 @@ The architecture implemented in this project consists of:
 | **Table Allocation & Useful Bit Controller** | Manages entry allocation in TAGE tables and updates the **useful bits (u-bits)** based on prediction correctness to control entry replacement. |
 | **Prediction Selector** | Selects the final prediction using the **alternative prediction policy**, choosing between the provider table and an alternative prediction when the provider confidence is low. |
 
-The predictor searches **all tables in parallel** during the fetch stage.
+### 📦 Table Entry Structure
+
+#### Table 0 (Base Predictor)
+- **2-bit Saturating Counter**  
+  Incremented when the branch is **taken** and decremented when the branch is **not taken**.
+  
+- **Valid Bit**  
+  Indicates whether the entry contains a valid prediction.  
+  If the entry is not valid, the predictor falls back to **static branch prediction**.
+
+---
+
+#### Table 1–3 (Tagged TAGE Tables)
+- **2-bit Saturating Counter**  
+  Incremented when the branch is **taken** and decremented when the branch is **not taken**.
+
+- **Valid Bit**  
+  Indicates whether the predictor entry is valid.  
+  If the entry is not valid, the predictor falls back to **static branch prediction**.
+
+- **Tag**  
+  Stores the tag used to verify whether the table entry corresponds to the current branch PC.
+
+- **Useful Bit (u-bit)**  
+  Indicates whether the entry has been useful for correct predictions.  
+  If the useful bit is **0**, the entry becomes a candidate for **replacement or new allocation**.
+
 
 ---
 
