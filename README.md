@@ -48,113 +48,79 @@ Currently, the implementation supports the **cv32a60x** and **cv32a65x** configu
 
 Support for additional CVA6 configurations will be extended in future work.
 
-# Implemented Predictors
+# Evaluation of Implemented Branch Predictors
 
-## Baseline BHT 
-(Implemented in Original CVA6 core, https://github.com/openhwgroup/cva6)
-- 2-bit saturating counter predictor
-- Indexed using PC bits
-- Serves as the baseline predictor
+## Hardware Configuration and Cost Comparison on branch predictors
 
----
+| Branch Predictor | Num. of Tables | Num. of Entries | Bits per Entry | Total Cost (Bytes) | 
+|-----------------|---------------|----------------|---------------|-------------------|
+| Baseline (BHT) | 1 | 8192 | 2-bit counter + 1-bit valid | 3,072 B |
+| GShare | 1 | 8192 | 2-bit counter + 1-bit valid | 3,072 B | 
+| TAGE | 4 | 64 / 256 / 512 / 1024 | 2-bit counter + 1-bit valid + tag (0/4/6/8 bit) | 2,224 B |
 
-## GShare Predictor
+**For detailed architectural specifications of the TAGE branch predictor, please refer to the README.md in the core directory.**
 
-GShare uses global branch history to improve prediction accuracy.
-
-Key features:
-
-- Global History Register (GHR)
-- Index = PC XOR GHR
-- Reduces aliasing compared to simple BHT
-
----
-
-## TAGE Predictor
-
-TAGE (Tagged Geometric History Length) is a state-of-the-art branch predictor.
-
-Features:
-
-- Base predictor
-- Multiple tagged predictor tables
-- Different history lengths
-- Tag matching for accurate prediction
-
-TAGE is able to capture **long branch correlations**, which improves prediction accuracy.
-
----
-
-# Benchmark Methodology
+## Benchmark Methodology
 
 Two types of benchmarks are used for evaluation.
 
-## Microbenchmarks
+### Microbenchmarks
 
-Designed to stress specific branch patterns.
+Synthetic workloads designed to stress specific branch behavior patterns.
 
-- **Aliasing**
-- **Alternating Pattern**
-- **Correlated Branch**
-- **Correlated Periodic**
-- **Periodic Pattern**
+- **Aliasing**  
+  Evaluates how different predictors handle destructive aliasing caused by multiple branches mapping to the same prediction entries.
 
-These tests highlight differences between branch predictors.
+- **Alternating Pattern**  
+  Tests the ability of predictors to learn regular alternating branch patterns (taken/not-taken).
 
+- **Correlated Branch**  
+  Measures how well predictors capture inter-branch correlations using global history information.
+
+- **Correlated Periodic**  
+  Evaluates the effectiveness of predictors in recognizing long periodic branch patterns generated from multiple correlated conditions.
 ---
 
-## Application Benchmarks
+### Application Benchmarks
 
 Real workloads with control-flow intensive behavior.
 
-- **Binary Search**
-- **N-Queens**
-- **QuickSort**
+- **Binary Search**  
+  Evaluates prediction accuracy for nested conditional branches commonly found in search algorithms.
 
-These workloads show practical performance improvements.
+- **N-Queens**  
+  Generates complex branch behavior due to recursive backtracking and deep control-flow exploration.
+
+- **QuickSort**  
+  Tests predictor performance on recursive divide-and-conquer algorithms with data-dependent branching.
+---
+
+## Results
+
+### Normalized IPC
+
+<img width="753" height="280" alt="image" src="https://github.com/user-attachments/assets/464c6a1a-0e8e-45d4-9b0d-cad695d0d82b" />
+
+The figure shows the normalized IPC improvement of different branch predictors across microbenchmarks and application benchmarks.
+
+GShare and TAGE significantly improve performance compared to the baseline BHT, particularly for structured branch patterns such as alternating and correlated branches.
+
+The effectiveness of TAGE can vary depending on the hashing scheme and the number of tag/index bits, which influence the level of aliasing in prediction tables. As a result, different applications with different branch behavior patterns may experience different performance improvements.
+
+These results demonstrate the impact of more advanced branch prediction mechanisms on overall processor performance.
+---
+
+### Branch Miss Rate
+
+<img width="755" height="305" alt="image" src="https://github.com/user-attachments/assets/f659741e-0df1-46b1-8f09-fdb1b6355b1f" />
+
+The figure shows the branch miss rate across different predictors.
+
+GShare and TAGE significantly outperform the baseline BHT for structured branch patterns, demonstrating the benefit of history-based prediction mechanisms.
+
+The performance gap varies across applications due to differences in branch patterns and aliasing behavior within the predictor tables.
 
 ---
 
-# Evaluation Metrics
-
-Two metrics are used.
-
-## Branch Miss Rate
-
-Percentage of branch mispredictions.
-
-Lower miss rate indicates better prediction accuracy.
-
----
-
-## IPC (Instructions Per Cycle)
-
-IPC measures overall processor performance.
-
-Branch mispredictions cause pipeline flushes, which reduce IPC.
-
-Improved prediction accuracy leads to higher IPC.
-
----
-
-# Results
-
-## Normalized IPC
-
-![IPC Results](results/ipc_results.png)
-
-TAGE significantly improves performance for branch-heavy workloads such as **alternating and correlated patterns**.
-
----
-
-## Branch Miss Rate
-
-![Miss Rate](results/miss_rate_results.png)
-
-TAGE achieves the lowest miss rate due to its ability to capture long branch history patterns.
-
----
-
-# Repository Structure
 
 
