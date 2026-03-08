@@ -75,7 +75,7 @@ The TAGE predictor generates **table indices and tags** using a combination of t
 ---
 
 ### 📦 Checkpoint Queue Entry
-<img width="1212" height="614" alt="image" src="https://github.com/user-attachments/assets/9bc66b3e-00ff-46f8-ac4e-66faa5449fb7" />
+<img width="1212" height="614" alt="image" src="https://github.com/user-attachments/assets/b98e6da8-6c6d-4740-9297-1535eecb6a47" />
 
 The **Checkpoint Queue** is implemented as a **circular queue**, indexed by the **Branch Instruction ID (Branch ID)**.  
 Each entry stores the necessary information required to **update the TAGE tables when a speculative branch is resolved**.
