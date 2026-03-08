@@ -79,8 +79,6 @@ The TAGE predictor generates **table indices and tags** using a combination of t
 The **Checkpoint Queue** is implemented as a **circular queue**, indexed by the **Branch Instruction ID (Branch ID)**.  
 Each entry stores the necessary information required to **update the TAGE tables when a speculative branch is resolved**.
 
----
-
 ### Entry Components
 
 #### TAGE Table Information (Table 1–3)
@@ -93,8 +91,6 @@ Each checkpoint entry stores the following information for every tagged TAGE tab
 - **Predicted Index / Tag**  
   The actual **index and tag values** used when predicting the branch instruction.
 
----
-
 #### Metadata
 
 - **TAGE Table Valid**  
@@ -105,15 +101,22 @@ Each checkpoint entry stores the following information for every tagged TAGE tab
 
 ---
 
-# 🔮 Prediction Stage (Fetch)
+### 🔮 Prediction Selection
 
-During instruction fetch, the predictor performs the following steps:
+The final branch prediction is determined through a **two-stage selection process**.
 
-### 1️⃣ Parallel Table Lookup
+#### 1️⃣ Champion Detection
 
-For an incoming **PC**, the predictor computes:
+The predictor first checks whether a **champion prediction** exists.  
+A champion indicates that the prediction confidence is sufficiently high.
 
-- **Index**
-- **Tag**
+If a champion is detected, the prediction from that table can be selected as the **final prediction**, even if the table has **lower priority (shorter history length)**.
 
-for each TAGE table using:
+
+#### 2️⃣ Table Priority Selection
+
+If no champion prediction exists, the predictor selects the prediction from the **highest-priority table**.
+
+Since TAGE tables are organized by **increasing history length**, tables with **longer history** have higher priority.
+
+Therefore, the final prediction is taken from the **highest-level table with a valid prediction**.
