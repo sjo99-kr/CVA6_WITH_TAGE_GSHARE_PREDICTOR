@@ -25,6 +25,7 @@ The architecture implemented in this project consists of:
 | **Global History Register (GHR)** | Records the outcomes of recent branches and is used to compute indices and tags for the TAGE tables. It is implemented as a **circular shift register**. |
 | **Folded Index and Tag Registers** | Compressed representations of the global history used to generate **table indices and tags**. These folded histories are implemented using **circular shift registers**. |
 | **Table Allocation & Useful Bit Controller** | Manages entry allocation in TAGE tables and updates the **useful bits (u-bits)** based on prediction correctness to control entry replacement. |
+| **Checkpoint Queue** | Stores the indices and tags of all TAGE tables for speculative branch instructions. The stored information is used to update the predictor state when the branch is resolved. |
 | **Prediction Selector** | Selects the final prediction using the **alternative prediction policy**, choosing between the provider table and an alternative prediction when the provider confidence is low. |
 
 ### 📦 Table Entry Structure
@@ -71,8 +72,38 @@ The TAGE predictor generates **table indices and tags** using a combination of t
 
 **Table_Tag   = PC ⊕ FoldedHistory (Folded Tag)**
 
+---
 
+### 📦 Checkpoint Queue Entry
 
+The **Checkpoint Queue** is implemented as a **circular queue**, indexed by the **Branch Instruction ID (Branch ID)**.  
+Each entry stores the necessary information required to **update the TAGE tables when a speculative branch is resolved**.
+
+---
+
+### Entry Components
+
+#### TAGE Table Information (Table 1–3)
+
+Each checkpoint entry stores the following information for every tagged TAGE table:
+
+- **Folded Index / Tag**  
+  Folded history values used for computing the **predicted index and tag**.
+
+- **Predicted Index / Tag**  
+  The actual **index and tag values** used when predicting the branch instruction.
+
+---
+
+#### Metadata
+
+- **TAGE Table Valid**  
+  Valid signals from all **TAGE tables (Table 1–3)** indicating whether each table produced a valid prediction.
+
+- **TAGE Table Prediction**  
+  Prediction results (**Taken / Not Taken**) from all **TAGE tables (Table 1–3)**.  
+
+---
 
 # 🔮 Prediction Stage (Fetch)
 
