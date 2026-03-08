@@ -136,12 +136,9 @@ The performance gap varies across applications due to differences in branch patt
 
 To evaluate prediction efficiency relative to hardware overhead, we introduce a **hardware-cost-normalized MPKI** metric.
 
-\[
-Cost\text{-}Normalized\ MPKI =
-\frac{\text{Branch Misses}}{\text{Total Instructions}} \times 1000 \div \text{Hardware Cost (Bytes)}
-\]
+Cost-Normalized MPKI = (Branch Misses / Total Instructions) × 1000 / Hardware Cost (Bytes)
 
-This metric highlights how effectively each predictor reduces branch mispredictions relative to its hardware footprint.
+This metric highlights the performance of branch predictors relative to its hardware cost.
 
 | Branch Predictor | Aliasing | Alternating | Correlated Branch | Correlated Periodic | Binary Search | N-Queens | QuickSort |
 |-----------------|----------|-------------|------------------|--------------------|--------------|----------|-----------|
