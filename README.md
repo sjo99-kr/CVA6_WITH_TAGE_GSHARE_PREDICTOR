@@ -106,11 +106,10 @@ Real workloads with control-flow intensive behavior.
 
 ## 📈 Performance Results
 
-### Normalized IPC
+### ⚡Normalized IPC
 
-<p align="center">
-<img width="800" height="300" alt="image" src="https://github.com/user-attachments/assets/464c6a1a-0e8e-45d4-9b0d-cad695d0d82b" />
-<\p>
+<img width="1200" height="300" alt="image" src="https://github.com/user-attachments/assets/464c6a1a-0e8e-45d4-9b0d-cad695d0d82b" />
+
 The figure shows the normalized IPC improvement of different branch predictors across microbenchmarks and application benchmarks.
 
 GShare and TAGE significantly improve performance compared to the baseline BHT, particularly for structured branch patterns such as alternating and correlated branches.
@@ -119,11 +118,10 @@ The effectiveness of TAGE can vary depending on the hashing scheme and the numbe
 
 ---
 
-### Branch Miss Rate
+### 📉Branch Miss Rate
 
-<p align="center">
-<img width="800" height="300" alt="image" src="https://github.com/user-attachments/assets/c6102838-5a17-4ee3-90b9-823a10c411d2" />
-<\p>
+<img width="1200" height="300" alt="image" src="https://github.com/user-attachments/assets/c6102838-5a17-4ee3-90b9-823a10c411d2" />
+
 The figure shows the branch miss rate across different predictors.
 
 GShare and TAGE significantly outperform the baseline BHT for structured branch patterns, demonstrating the benefits of history-based branch prediction mechanisms.
