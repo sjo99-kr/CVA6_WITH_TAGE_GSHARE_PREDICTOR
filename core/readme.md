@@ -2,7 +2,6 @@
 # 🚀 TAGE Branch Predictor for CVA6
 
 This document describes the **architecture and functional behavior of the TAGE branch predictor integrated into the CVA6 core**.  
-The explanation focuses on the **prediction stage (fetch time)** and the **resolution stage (execute time)**.
 
 ---
 
