@@ -6,7 +6,7 @@ The explanation focuses on the **prediction stage (fetch time)** and the **resol
 
 ---
 
-# 🧠 TAGE Predictor Architecture
+## 🧠 TAGE Predictor Architecture
 
 <p align="center">
 <img width="1231" height="652" alt="image" src="https://github.com/user-attachments/assets/7be3d6bb-aac4-4bbe-9cd1-72cde7e4df21" >
@@ -20,11 +20,12 @@ The architecture implemented in this project consists of:
 
 | Component | Description |
 |----------|-------------|
-| **BHT (Base Predictor)** | A simple PC-indexed 2-bit saturating counter predictor used as the fallback prediction source. |
-| **TAGE Tables (T1 ~ T4)** | Multiple tagged predictor tables indexed using hashed PC and folded global history. |
-| **Global History Register (GHR)** | Stores recent branch outcomes and is used to compute table indices and tags. |
-| **Folded History Registers** | Compress long global history into smaller widths suitable for indexing/tag generation. |
-| **Prediction Selector** | Chooses the prediction from the longest matching table with a valid tag. |
+| **BHT (Base Predictor)** | A simple PC-indexed predictor using a **2-bit saturating counter**, serving as the fallback prediction source when no tagged table provides a valid match. |
+| **TAGE Tables (T1–T4)** | Multiple tagged predictor tables indexed using a combination of the **program counter (PC)** and **folded global history**, each table using a different history length. |
+| **Global History Register (GHR)** | Records the outcomes of recent branches and is used to compute indices and tags for the TAGE tables. It is implemented as a **circular shift register**. |
+| **Folded Index and Tag Registers** | Compressed representations of the global history used to generate **table indices and tags**. These folded histories are implemented using **circular shift registers**. |
+| **Table Allocation & Useful Bit Controller** | Manages entry allocation in TAGE tables and updates the **useful bits (u-bits)** based on prediction correctness to control entry replacement. |
+| **Prediction Selector** | Selects the final prediction using the **alternative prediction policy**, choosing between the provider table and an alternative prediction when the provider confidence is low. |
 
 The predictor searches **all tables in parallel** during the fetch stage.
 
