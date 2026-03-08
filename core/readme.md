@@ -67,11 +67,9 @@ The architecture implemented in this project consists of:
 
 The TAGE predictor generates **table indices and tags** using a combination of the **program counter (PC)** and **folded global history**.
 
-For Table 1,2,3,
-  Table_Index = PC ⊕ FoldedHistory (Folded Index)
-  Table_Tag   = PC ⊕ FoldedHistory (Folded Tag)
+**Table_Index = PC ⊕ FoldedHistory (Folded Index)**
 
-
+**Table_Tag   = PC ⊕ FoldedHistory (Folded Tag)**
 
 
 
